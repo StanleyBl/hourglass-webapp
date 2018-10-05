@@ -46,7 +46,7 @@ export interface TimeBooking {
   time_entry: TimeEntry;
 }
 
-export interface TimeEntry {
+export class TimeEntry {
   id: number;
   project_id: number;
   user_id: number;

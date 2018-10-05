@@ -24,6 +24,7 @@ export class TimerControlManualComponent implements OnInit {
   constructor(private dataService: RedmineService) { }
 
   ngOnInit() {
+    this.model = new TimeEntry();
     this.inputDate = new Date();
     this.inputStart = this.inputDate.getHours().toString().padStart(2, '0') +
         ':' + this.inputDate.getMinutes().toString().padStart(2, '0');
@@ -39,9 +40,17 @@ export class TimerControlManualComponent implements OnInit {
 
     const diff = stop - start;
 
+    this.model.project_id = 238;
+    this.model.spent_on = new Date().toDateString();
+    this.model.hours = 1.4;
+    this.model.activity_id = 1;
+    this.model.comments = 'test';
+
     // TODO: Post/Put Timebooking
     this.dataService.postTimeTracker(this.model).subscribe(data => {
-
+      console.log(data);
+    }, error => {
+      console.log(error);
     });
   }
 }

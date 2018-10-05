@@ -20,7 +20,7 @@ export class RedmineService extends BasedataService {
   }
 
   private getFullEndpointUrl(path: string): string {
-    return super.getFullUrl(path + '.json');
+    return super.getFullUrl(path + '.json?limit=1000');
   }
 
   getProjects(): Observable<Projects> {
