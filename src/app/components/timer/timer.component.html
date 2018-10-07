@@ -10,14 +10,14 @@
     </mat-card-header>
 </mat-card>
 
-<app-timer-control *ngIf="isAutomaticMode"
+<app-timer-control [hidden]="!isAutomaticMode"
                   [timeTracker]="currentTimeTracker"
                    [isLoading]="isLoading"
                    [isRunning]="isRunning"
                    (startTimerEvent)="startTimer($event)"
                    (stopTimerEvent)="stopTimer($event)"></app-timer-control>
 
-<app-timer-control-manual *ngIf="!isAutomaticMode"
+<app-timer-control-manual [hidden]="isAutomaticMode"
                   [timeTracker]="currentTimeTracker"
                    [isLoading]="isLoading"
                    (startTimerEvent)="startTimer($event)"

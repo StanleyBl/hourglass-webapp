@@ -3,7 +3,7 @@ import { TimeBookings, TimeTracker, TimeTrackers } from '../../services/timer/ti
 import { TimerService } from '../../services/timer/timer.service';
 import { UserService } from '../../services/user/user.service';
 import { RedmineService } from '../../services/redmine/redmine.service';
-import { TimerStoreService } from '../../services/stores/timer-store.service';
+import { TimerStore } from '../../services/stores/timer-store.service';
 
 @Component({
   selector: 'app-timer',
@@ -23,9 +23,8 @@ export class TimerComponent implements OnInit {
   isAutomaticMode = true;
 
   constructor(private timerService: TimerService,
-              private redmineService: RedmineService,
               private userService: UserService,
-              private timerStore: TimerStoreService) { }
+              private timerStore: TimerStore) { }
 
   ngOnInit() {
     this.userId = this.userService.getUserId();

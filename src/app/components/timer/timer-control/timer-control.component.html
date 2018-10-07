@@ -6,7 +6,17 @@
                [disabled]="isLoading"
                placeholder="Task description"
                [(ngModel)]="timeTracker.comments"
-               name="comments">
+               name="comments"
+               (keyup)="onAutoSelectLogs($event)"
+               [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option (onSelectionChange)="onSelectTimelog(log)" *ngFor="let log of selectedTimeLogs" [value]="log.comments">
+            {{log.comments}}
+            <span [style.color]="log.project?.color">
+                <i class="material-icons project-info">folder</i>
+                {{log?.project?.name}}</span>
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
       <mat-form-field>
           <mat-select placeholder="Select project" [(value)]="timeTracker.project_id">

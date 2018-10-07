@@ -8,7 +8,20 @@ import { RedmineService } from '../redmine/redmine.service';
 @Injectable({
   providedIn: 'root'
 })
-export class TimerStoreService {
+export class TimerStore {
+
+  colorCodes = [
+    { code: '4' , value: '0123456789'},
+    { code: '5' , value: 'abc'},
+    { code: '6' , value: 'def'},
+    { code: '7' , value: 'ghi'},
+    { code: '8' , value: 'jkl'},
+    { code: '9' , value: 'mno'},
+    { code: 'A' , value: 'pqr'},
+    { code: 'B' , value: 'stu'},
+    { code: 'C' , value: 'vwx'},
+    { code: 'D' , value: 'yz'},
+  ];
 
   public isLoading$:  Subject<boolean> = new Subject<boolean>();
   public timeTrackers$: Subject<TimeTrackers> = new Subject<TimeTrackers>();
@@ -35,7 +48,6 @@ export class TimerStoreService {
       this.timeBookings = data[1];
       this.projects = data[2];
 
-      console.log(this.projects);
       this.projects.projects.forEach(x => x.color = this.getRandomColor(x.name));
       this.assignProject();
 
@@ -59,9 +71,17 @@ export class TimerStoreService {
     }
   }
 
-  private getRandomColor (projectName: string) {
-    projectName = projectName.replace(/[^a-f0-9]/gi, '');
-    projectName = projectName.padStart(6, '000').slice(-6);
-    return '#' + projectName.toUpperCase();
+  private getRandomColor(projectName: string) {
+    const chars = projectName
+      .replace(/[^a-z0-9]/gi, '')
+      .slice(-6)
+      .padStart(6, '000')
+      .split('');
+
+    let colorCode = '#';
+    for (const item of chars) {
+      colorCode += this.colorCodes.find(x => x.value.includes(item.toLowerCase())).code;
+    }
+    return colorCode;
   }
 }

@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 import { GroupedTimeLogs, TimeTracker, TimeBooking } from '../../../services/timer/timer.interface';
 import { TimelogDeleteDialogComponent } from './timelog-delete-dialog/timelog-delete-dialog.component';
 import { Project } from '../../../services/redmine/redmine.interface';
-import { TimerStoreService } from '../../../services/stores/timer-store.service';
+import { TimerStore } from '../../../services/stores/timer-store.service';
 
 @Component({
   selector: 'app-time-logs',
@@ -22,7 +22,7 @@ export class TimeLogsComponent implements OnInit, OnChanges {
   groupedTimeLogs: GroupedTimeLogs[] = [];
 
   constructor(private dialog: MatDialog,
-    private dataStore: TimerStoreService) { }
+    private dataStore: TimerStore) { }
 
   ngOnInit() {
     this.dataStore.projects$.subscribe(data => this.projects = data);

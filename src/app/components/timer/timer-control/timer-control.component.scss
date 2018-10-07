@@ -10,3 +10,9 @@ form {
   grid-template-columns: 4fr 1fr 10rem 6rem;
   grid-column-gap: 30px;
 }
+
+.project-info {
+  position: relative;
+  top: 0.2em;
+  margin-left: 10px;
+}

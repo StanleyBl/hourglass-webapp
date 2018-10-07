@@ -3,7 +3,7 @@ import { interval, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TimeTracker } from '../../../services/timer/timer.interface';
 import { Project } from '../../../services/redmine/redmine.interface';
-import { TimerStoreService } from '../../../services/stores/timer-store.service';
+import { TimerStore } from '../../../services/stores/timer-store.service';
 
 @Component({
   selector: 'app-timer-control',
@@ -22,11 +22,14 @@ export class TimerControlComponent implements OnInit {
 
   projects: Project[];
   currentTime$: Observable<number>;
+  timeLogs: TimeTracker[];
+  selectedTimeLogs: TimeTracker[];
 
-  constructor(private dataStore: TimerStoreService) { }
+  constructor(private dataStore: TimerStore) { }
 
   ngOnInit() {
     this.dataStore.projects$.subscribe(data => this.projects = data);
+    this.dataStore.timeTrackers$.subscribe(timelogs => this.timeLogs = timelogs.records);
     this.currentTime$ = interval(1000).pipe(
       map((x) => {
         if (this.isRunning) {
@@ -56,4 +59,26 @@ export class TimerControlComponent implements OnInit {
     this.timeTracker = {};
   }
 
+  onAutoSelectLogs($event) {
+    const searchString = String($event.srcElement.value).toLowerCase();
+    if (searchString.length > 0) {
+      this.selectedTimeLogs = this.timeLogs.filter(x => x.comments.toLowerCase().includes(searchString));
+      this.selectedTimeLogs.sort((a, b) => b.id - a.id);
+
+      // remove dublicates
+      this.selectedTimeLogs = this.selectedTimeLogs.filter((thing, index, self) =>
+        index === self.findIndex((t) => (
+          t.comments === thing.comments
+        ))
+      );
+
+      this.selectedTimeLogs.splice(10, this.selectedTimeLogs.length);
+    } else {
+      this.selectedTimeLogs = [];
+    }
+  }
+
+  onSelectTimelog(timelog: TimeTracker) {
+    this.timeTracker.project_id = timelog.project.id;
+  }
 }

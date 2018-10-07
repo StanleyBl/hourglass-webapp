@@ -16,7 +16,8 @@ import {
   MatSpinner,
   MatProgressSpinnerModule,
   MatDatepickerModule,
-  MatNativeDateModule
+  MatNativeDateModule,
+  MatAutocompleteModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserModule } from '@angular/platform-browser';
@@ -79,7 +80,8 @@ import { RedmineService } from './services/redmine/redmine.service';
     MatSelectModule,
     MatProgressSpinnerModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatAutocompleteModule
   ],
   providers: [
     AuthenticationService,
