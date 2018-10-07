@@ -44,7 +44,7 @@ export class TimerComponent implements OnInit {
       this.isRunning = true;
       this.isLoading = false;
     }, error => {
-      this.snackBar.open(error.message);
+      this.snackBar.open(error.message, '', {duration: 4000});
       console.log(error);
       this.isLoading = false;
     });
@@ -57,7 +57,7 @@ export class TimerComponent implements OnInit {
       this.isLoading = false;
       this.timerStore.loadData();
     }, error => {
-      this.snackBar.open(error.message);
+      this.snackBar.open(error.message, '', {duration: 4000});
       this.isLoading = false;
       console.log(error);
     });
@@ -80,8 +80,9 @@ export class TimerComponent implements OnInit {
 
   getTimlogDeleteEvent(timeLogId: number) {
     this.timerService.deleteTimeLog(timeLogId).subscribe(result => {
-      console.log('time entry deleted');
+      this.snackBar.open('time entry deleted', '', {duration: 4000});
     }, error => {
+      this.snackBar.open(error.message, '', {duration: 4000});
       console.log(error);
     });
   }
