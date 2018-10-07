@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
 import { interval, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TimeTracker } from '../../../services/timer/timer.interface';
-import { Projects, Project } from '../../../services/redmine/redmine.interface';
+import { Project } from '../../../services/redmine/redmine.interface';
+import { TimerStoreService } from '../../../services/stores/timer-store.service';
 
 @Component({
   selector: 'app-timer-control',
@@ -13,18 +14,19 @@ import { Projects, Project } from '../../../services/redmine/redmine.interface';
 export class TimerControlComponent implements OnInit {
 
   @Input() timeTracker: Partial<TimeTracker> = {};
-  @Input() projects: Project[];
   @Input() isLoading: boolean;
   @Input() isRunning: boolean;
 
   @Output() startTimerEvent: EventEmitter<Partial<TimeTracker>> = new EventEmitter<Partial<TimeTracker>>();
   @Output() stopTimerEvent: EventEmitter<number> = new EventEmitter<number>();
 
+  projects: Project[];
   currentTime$: Observable<number>;
 
-  constructor() { }
+  constructor(private dataStore: TimerStoreService) { }
 
   ngOnInit() {
+    this.dataStore.projects$.subscribe(data => this.projects = data);
     this.currentTime$ = interval(1000).pipe(
       map((x) => {
         if (this.isRunning) {

@@ -12,7 +12,6 @@
 
 <app-timer-control *ngIf="isAutomaticMode"
                   [timeTracker]="currentTimeTracker"
-                   [projects]="projects?.projects"
                    [isLoading]="isLoading"
                    [isRunning]="isRunning"
                    (startTimerEvent)="startTimer($event)"
@@ -20,18 +19,16 @@
 
 <app-timer-control-manual *ngIf="!isAutomaticMode"
                   [timeTracker]="currentTimeTracker"
-                  [projects]="projects?.projects"
                    [isLoading]="isLoading"
                    (startTimerEvent)="startTimer($event)"
                    (stopTimerEvent)="stopTimer($event)"></app-timer-control-manual>
 
 <section>
-  <mat-spinner *ngIf="isTimeLogsLoading"></mat-spinner>
-  <app-time-logs *ngIf="!isTimeLogsLoading"
-                 [timeLogs]="timeLogs.records"
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <app-time-logs *ngIf="!isLoading"
+                 [timeLogs]="timeLogs?.records"
                  (deleteTimeLogEvent)="getTimlogDeleteEvent($event)"
                  [timeLogs]="timeLogs?.records"
-                 [timeBookings]="timeBookings?.records"
-                 [projects]="projects?.projects">
+                 [timeBookings]="timeBookings?.records">
   </app-time-logs>
 </section>

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { BasedataService } from '../shared/basedata.service';
 import { Projects } from './redmine.interface';

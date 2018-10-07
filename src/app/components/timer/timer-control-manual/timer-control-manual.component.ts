@@ -3,6 +3,7 @@ import { Project } from '../../../services/redmine/redmine.interface';
 import { TimeTracker, TimeEntry } from '../../../services/timer/timer.interface';
 import { TimerService } from '../../../services/timer/timer.service';
 import { RedmineService } from '../../../services/redmine/redmine.service';
+import { TimerStoreService } from '../../../services/stores/timer-store.service';
 
 @Component({
   selector: 'app-timer-control-manual',
@@ -11,19 +12,21 @@ import { RedmineService } from '../../../services/redmine/redmine.service';
 })
 export class TimerControlManualComponent implements OnInit {
 
-  @Input() projects: Project[];
   @Input() timeTracker: Partial<TimeTracker> = {};
   @Input() isLoading = false;
 
+  projects: Project[];
   model: TimeEntry;
 
   inputDate: Date;
   inputStart: string;
   inputEnd: string;
 
-  constructor(private dataService: RedmineService) { }
+  constructor(private dataService: RedmineService,
+    private dataStore: TimerStoreService) { }
 
   ngOnInit() {
+    this.dataStore.projects$.subscribe(data => this.projects = data);
     this.model = new TimeEntry();
     this.inputDate = new Date();
     this.inputStart = this.inputDate.getHours().toString().padStart(2, '0') +

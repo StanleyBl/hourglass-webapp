@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angu
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { GroupedTimeLogs, TimeTracker, TimeBooking } from '../../../services/timer/timer.interface';
 import { TimelogDeleteDialogComponent } from './timelog-delete-dialog/timelog-delete-dialog.component';
-import { Projects, Project } from '../../../services/redmine/redmine.interface';
+import { Project } from '../../../services/redmine/redmine.interface';
+import { TimerStoreService } from '../../../services/stores/timer-store.service';
 
 @Component({
   selector: 'app-time-logs',
@@ -13,24 +14,21 @@ export class TimeLogsComponent implements OnInit, OnChanges {
 
   @Input() timeLogs: TimeTracker[];
   @Input() timeBookings: TimeBooking[];
-  @Input() projects: Project[];
+  projects: Project[];
 
   @Output() deleteTimeLogEvent: EventEmitter<number> = new EventEmitter<number>();
 
   today: number;
   groupedTimeLogs: GroupedTimeLogs[] = [];
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog,
+    private dataStore: TimerStoreService) { }
 
   ngOnInit() {
+    this.dataStore.projects$.subscribe(data => this.projects = data);
     const today = new Date(Date.now()).setHours(0, 0, 0, 0);
     this.today = new Date(today).getTime();
-    this.sortByDate();
-    this.timeLogs.map(timeLog => {
-      timeLog.diff_time = this.getTimeDifference(timeLog.start, timeLog.stop);
-      return timeLog;
-    });
-    this.groupTimeLogsByDate();
+
   }
 
   getDaysForLastTwoWeeks(): number[] {
@@ -68,13 +66,22 @@ export class TimeLogsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    this.assignProject();
+    if (this.timeLogs) {
+      this.timeLogs.map(timeLog => {
+        timeLog.diff_time = this.getTimeDifference(timeLog.start, timeLog.stop);
+        return timeLog;
+      });
+      this.sortByDate();
+      this.groupTimeLogsByDate();
+    }
   }
 
   sortByDate() {
-    this.timeLogs.sort((a, b) => {
-      return new Date(b.start).getTime() - new Date(a.start).getTime();
-    });
+    if (this.timeLogs) {
+      this.timeLogs.sort((a, b) => {
+        return new Date(b.start).getTime() - new Date(a.start).getTime();
+      });
+    }
   }
 
   getTimeDifference(startTime: string, stopTime: string): number {
@@ -105,17 +112,6 @@ export class TimeLogsComponent implements OnInit, OnChanges {
     if (timelogIndex !== -1) {
       this.timeLogs.splice(timelogIndex, 1);
       this.groupTimeLogsByDate();
-    }
-  }
-
-  assignProject() {
-    if (this.timeBookings && this.projects) {
-      for (const item of this.timeLogs) {
-        const booking = this.timeBookings.find(x => x.time_log_id === item.id);
-        if (booking) {
-          item.project = this.projects.find(x => x.id === booking.time_entry.project_id);
-        }
-      }
     }
   }
 }
