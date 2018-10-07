@@ -12,7 +12,7 @@
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option (onSelectionChange)="onSelectTimelog(log)" *ngFor="let log of selectedTimeLogs" [value]="log.comments">
             {{log.comments}}
-            <span [style.color]="log.project?.color">
+            <span [style.color]="log.project?.color" *ngIf="log.project">
                 <i class="material-icons project-info">folder</i>
                 {{log?.project?.name}}</span>
           </mat-option>

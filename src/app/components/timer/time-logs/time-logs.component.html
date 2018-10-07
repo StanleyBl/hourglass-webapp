@@ -21,6 +21,7 @@
           <div class="time-log-details">
             <p>{{ timeLog.comments }}</p>
             <p [style.color]="timeLog?.project?.color"> {{timeLog?.project?.name}}</p>
+            <p><i class="material-icons billable-icon" *ngIf="timeLog.activity_id === 13">attach_money</i></p>
             <p>{{ timeLog.start | date:'HH:mm:ss' }} - {{ timeLog.stop | date:'HH:mm:ss' }}</p>
             <p>{{ timeLog.diff_time | date:'HH:mm:ss' }}</p>
             <button mat-icon-button

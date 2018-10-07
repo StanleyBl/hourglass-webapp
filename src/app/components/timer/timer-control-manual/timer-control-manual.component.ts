@@ -81,6 +81,8 @@ export class TimerControlManualComponent implements OnInit {
   }
 
   onSelectTimelog(timelog: TimeTracker) {
-    this.timeTracker.project_id = timelog.project.id;
+    if (timelog.project) {
+      this.timeTracker.project_id = timelog.project.id;
+    }
   }
 }

@@ -4,6 +4,7 @@ import { TimerService } from '../../services/timer/timer.service';
 import { UserService } from '../../services/user/user.service';
 import { RedmineService } from '../../services/redmine/redmine.service';
 import { TimerStore } from '../../services/stores/timer-store.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-timer',
@@ -24,7 +25,8 @@ export class TimerComponent implements OnInit {
 
   constructor(private timerService: TimerService,
               private userService: UserService,
-              private timerStore: TimerStore) { }
+              private timerStore: TimerStore,
+              public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.userId = this.userService.getUserId();
@@ -42,7 +44,8 @@ export class TimerComponent implements OnInit {
       this.isRunning = true;
       this.isLoading = false;
     }, error => {
-      console.log('error');
+      this.snackBar.open(error.message);
+      console.log(error);
       this.isLoading = false;
     });
   }
@@ -54,6 +57,7 @@ export class TimerComponent implements OnInit {
       this.isLoading = false;
       this.timerStore.loadData();
     }, error => {
+      this.snackBar.open(error.message);
       this.isLoading = false;
       console.log(error);
     });

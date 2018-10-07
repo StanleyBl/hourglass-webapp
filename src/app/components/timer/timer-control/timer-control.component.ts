@@ -71,7 +71,7 @@ export class TimerControlComponent implements OnInit {
           t.comments === thing.comments
         ))
       );
-
+      // show max 10 entries
       this.selectedTimeLogs.splice(10, this.selectedTimeLogs.length);
     } else {
       this.selectedTimeLogs = [];
@@ -79,6 +79,8 @@ export class TimerControlComponent implements OnInit {
   }
 
   onSelectTimelog(timelog: TimeTracker) {
-    this.timeTracker.project_id = timelog.project.id;
+    if (timelog.project) {
+      this.timeTracker.project_id = timelog.project.id;
+    }
   }
 }

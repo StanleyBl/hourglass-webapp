@@ -66,6 +66,7 @@ export class TimerStore {
     for (const item of this.timeLogs.records) {
       const booking = this.timeBookings.records.find(x => x.time_log_id === item.id);
       if (booking) {
+        item.activity_id = booking.time_entry.activity_id;
         item.project = this.projects.projects.find(x => x.id === booking.time_entry.project_id);
       }
     }
@@ -74,7 +75,7 @@ export class TimerStore {
   private getRandomColor(projectName: string) {
     const chars = projectName
       .replace(/[^a-z0-9]/gi, '')
-      .slice(-6)
+      .slice(0, 6)
       .padStart(6, '000')
       .split('');
 
