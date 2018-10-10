@@ -36,13 +36,15 @@
           <mat-form-field>
             <input type="time" matInput placeholder="End" [(ngModel)]="inputEnd" name="end">
           </mat-form-field>
+          <mat-checkbox [(ngModel)]="timeTracker.billable"
+            name="billable">Billable</mat-checkbox>
         <div>
             <button *ngIf="!isRunning"
             mat-raised-button
             color="primary"
             type="submit"
             [disabled]="isLoading"
-            (click)="onSubmit()">Save</button>
+            (click)="add()">Save</button>
         </div>
       </form>
     </mat-card-content>

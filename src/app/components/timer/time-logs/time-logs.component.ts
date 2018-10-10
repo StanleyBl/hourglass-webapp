@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { GroupedTimeLogs, TimeTracker, TimeBooking } from '../../../services/timer/timer.interface';
 import { TimelogDeleteDialogComponent } from './timelog-delete-dialog/timelog-delete-dialog.component';
@@ -8,7 +8,8 @@ import { TimerStore } from '../../../services/stores/timer-store.service';
 @Component({
   selector: 'app-time-logs',
   templateUrl: './time-logs.component.html',
-  styleUrls: ['./time-logs.component.scss']
+  styleUrls: ['./time-logs.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TimeLogsComponent implements OnInit, OnChanges {
 
@@ -49,6 +50,7 @@ export class TimeLogsComponent implements OnInit, OnChanges {
     const lastTwoWeeksDays = this.getDaysForLastTwoWeeks();
     lastTwoWeeksDays.forEach((day, index) => {
       const group: GroupedTimeLogs = {
+        time_sum: 0,
         int_date: day,
         time_logs: []
       };
@@ -59,6 +61,7 @@ export class TimeLogsComponent implements OnInit, OnChanges {
         }
       });
       if (timeLogs.length !== 0) {
+        group.time_sum = this.getDayTimeSum(timeLogs);
         group.time_logs = timeLogs;
       }
       this.groupedTimeLogs[index] = group;
@@ -82,6 +85,19 @@ export class TimeLogsComponent implements OnInit, OnChanges {
         return new Date(b.start).getTime() - new Date(a.start).getTime();
       });
     }
+  }
+
+  getDayTimeSum(timeLogs: TimeTracker[]): number {
+    const emptyTime = new Date(0, 0, 0, 0, 0, 0, 0);
+    timeLogs.forEach(timeLog => {
+      const timeLogTime = new Date(timeLog.diff_time);
+      emptyTime.setHours(
+        emptyTime.getHours() + timeLogTime.getHours(),
+        emptyTime.getMinutes() + timeLogTime.getMinutes(),
+        emptyTime.getSeconds() + timeLogTime.getSeconds(),
+        0);
+    });
+    return emptyTime.getTime();
   }
 
   getTimeDifference(startTime: string, stopTime: string): number {

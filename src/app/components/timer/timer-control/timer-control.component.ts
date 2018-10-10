@@ -68,7 +68,7 @@ export class TimerControlComponent implements OnInit {
       // remove dublicates
       this.selectedTimeLogs = this.selectedTimeLogs.filter((thing, index, self) =>
         index === self.findIndex((t) => (
-          t.comments === thing.comments
+          t.comments === thing.comments && t.project_id === thing.project_id
         ))
       );
       // show max 10 entries

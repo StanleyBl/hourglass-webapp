@@ -19,14 +19,13 @@
 
 <app-timer-control-manual [hidden]="isAutomaticMode"
                   [timeTracker]="currentTimeTracker"
+                  [userId]="userId"
                    [isLoading]="isLoading"
-                   (startTimerEvent)="startTimer($event)"
-                   (stopTimerEvent)="stopTimer($event)"></app-timer-control-manual>
+                   (addManualTimeEntryEvent)="getAddManualTimeEntryEvent($event)"></app-timer-control-manual>
 
 <section>
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <app-time-logs *ngIf="!isLoading"
-                 [timeLogs]="timeLogs?.records"
                  (deleteTimeLogEvent)="getTimlogDeleteEvent($event)"
                  [timeLogs]="timeLogs?.records"
                  [timeBookings]="timeBookings?.records">

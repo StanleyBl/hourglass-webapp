@@ -87,4 +87,24 @@ export class TimerComponent implements OnInit {
     });
   }
 
+  getAddManualTimeEntryEvent(newTimeLogs: Partial<TimeTracker>[]) {
+    this.timerService.createTimeLogs(newTimeLogs).subscribe(result => {
+      if (result) {
+        this.bookManualTimeEntry(result.success[0].id, newTimeLogs[0]);
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  bookManualTimeEntry(id: number, timeLog: Partial<TimeTracker>) {
+    this.timerService.bookTimeLog(id, timeLog).subscribe(result => {
+
+      this.timerStore.loadData();
+    }, error => {
+      console.log(error);
+    });
+  }
+
+
 }

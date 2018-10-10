@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Project } from '../../../services/redmine/redmine.interface';
 import { TimeTracker, TimeEntry } from '../../../services/timer/timer.interface';
 import { TimerService } from '../../../services/timer/timer.service';
@@ -14,6 +14,8 @@ export class TimerControlManualComponent implements OnInit {
 
   @Input() timeTracker: Partial<TimeTracker> = {};
   @Input() isLoading = false;
+  @Input() userId: number;
+  @Output() addManualTimeEntryEvent: EventEmitter<Partial<TimeTracker>[]> = new EventEmitter<Partial<TimeTracker>[]>();
 
   projects: Project[];
   model: TimeEntry;
@@ -37,28 +39,29 @@ export class TimerControlManualComponent implements OnInit {
         ':' + this.inputDate.getMinutes().toString().padStart(2, '0');
     this.inputEnd = this.inputDate.getHours().toString().padStart(2, '0') +
         ':' + (this.inputDate.getMinutes() + 1).toString().padStart(2, '0');
+    this.timeTracker.billable = true;
   }
 
-  onSubmit() {
+  add() {
     const startTime = this.inputStart.split(':');
     const endTime = this.inputEnd.split(':');
-    const start = new Date(this.inputDate).setHours(+startTime[0], +startTime[1]);
-    const stop = new Date(this.inputDate).setHours(+endTime[0], +endTime[1]);
+    const start = new Date(this.inputDate).setHours(+startTime[0], +startTime[1], 0, 0);
+    const stop = new Date(this.inputDate).setHours(+endTime[0], +endTime[1], 0, 0);
 
-    const diff = stop - start;
+    const newTimelog: Partial<TimeTracker>[] = [{
+      start: new Date(start).toISOString(),
+      stop: new Date(stop).toISOString(),
+      user_id: this.userId,
+      project_id: this.timeTracker.project_id ? this.timeTracker.project_id : null,
+      issue_id: this.timeTracker.issue_id ? this.timeTracker.issue_id : null,
+      comments: this.timeTracker.comments ? this.timeTracker.comments : null,
+      activity_id: this.timeTracker.billable ? 13 : 14
+    }];
 
-    this.model.project_id = 238;
-    this.model.spent_on = new Date().toDateString();
-    this.model.hours = 1.4;
-    this.model.activity_id = 1;
-    this.model.comments = 'test';
+    this.addManualTimeEntryEvent.emit(newTimelog);
+    this.timeTracker = {};
+    this.ngOnInit();
 
-    // TODO: Post/Put Timebooking
-    this.dataService.postTimeTracker(this.model).subscribe(data => {
-      console.log(data);
-    }, error => {
-      console.log(error);
-    });
   }
 
   onAutoSelectLogs($event) {
